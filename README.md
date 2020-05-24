@@ -1,35 +1,101 @@
 # Standard Microwave Instruction String Format (SMISF)
 
 #### What?
+
 SMISF is a format for encoding microwave instructions into a string.
 
 #### Why?
-Just like the question "why does my code work", my answer is: I don't know.
+
+Because I can
 
 # Usage
 
 Install `smisf`:
+
 ```bash
 npm install --save smisf
 ```
 
 If you're using CommonJS (default), require `smisf`:
+
 ```js
 const smisf = require('smisf');
 ```
 
 If you're using ESM, import `smisf`:
-```js
+
+```ts
 import * as smisf from 'smisf';
 ```
 
-To build a microwave instruction set, 
+# API
+
+```ts
+const creator = new smisf.Creator();
+creator.cook(minutes, seconds, powerLevel); // Add a cook instruction // powerLevel can be either: "HI", Or a multiple of 10 from 00 to 90
+
+creator.change('M'); // Apply a single change, a single letter
+creator.change(['U', 'F', 'S']); // Apply multiple changes, each a single letter
+
+creator.toString(); // Get HEX string
+creator.toString(true); // Get string
+
+creator.do(); // Get string and clear, ready for another instruction set
+```
+
+```ts
+const parse = smisf.parse; // Just a shorthand
+parse(hexString); // Parse an instruction string, returns an array of objects, see <Parsed value types> for object types
+```
+
+```ts
+const stepper = smisf.stepper(hexString); // Generator
+for (let value of stepper) {
+  // value is a parsed value, see <Parsed value types>
+}
+```
+
+### Parsed value types:
+
+```ts
+{
+  type: 'cook',
+  powerLevel: 'HI' | number,
+  minutes: number,
+  seconds: number,
+  fullSeconds: number // (minutes * 60) + seconds
+} | {
+  type: 'change',
+  changes: Array<string>
+}
+```
+
+## Example
+
+```ts
+import * as smisf from 'smisf';
+import { inspect } from 'util';
+
+const c = new smisf.Creator();
+const created = c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').do();
+const parsed = smisf.parse(created);
+const stepper = smisf.stepper(created);
+
+console.log(`Created: ${c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').toString(true)}`);
+console.log(`Created, HEX: ${inspect(created)}`);
+console.log(`Parsed: ${inspect(parsed)}`);
+
+for (let i of stepper) {
+  console.log(`Stepper result: ${inspect(i)}`);
+}
+```
 
 # Format
 
 Instruction strings should be UTF-8, then encoded into HEX.
 
 ### Syntax
+
 ```
 <SMISF=args>
 args can be one of the following:
@@ -49,7 +115,10 @@ args can be one of the following:
     OPERATIONS can be multiple "operations" (see Operations section)
 ```
 
-### Operations
+### Operation suggestions
+
+_These are just suggestions, you can implement your own, or not use these at all_
+
 M - Mix  
 S - Stir  
 F - Flip  
@@ -57,6 +126,7 @@ C - Cover
 U - Uncover
 
 ### Examples
+
 `<SMISF=/C/HI#1:35/UF/30#0:10>` - Cover, 1 minute and 35 seconds on HIGH, Uncover, Flip, 10 seconds on 30.
 `<SMISF=/70#25:00>` - Twenty-five minutes on 70
 

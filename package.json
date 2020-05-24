@@ -1,6 +1,7 @@
 {
   "name": "smisf",
   "description": "Standard Microwave Instruction String Format",
+  "version": "1.0.0",
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc"

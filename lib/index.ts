@@ -93,6 +93,7 @@ export const parse = (
       changes: Array<string>;
     }
 > => {
+  str = fromHex(str);
   str.replace(/<SMISF=/g, '').replace(/>/g, '');
 
   let ret = [];

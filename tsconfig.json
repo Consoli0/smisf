@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir": "dist/",
+    "alwaysStrict": true,
+    "downlevelIteration": true,
+    "declaration": true,
+    "lib": ["ES2020.String"]
+  },
+  "include": ["lib/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

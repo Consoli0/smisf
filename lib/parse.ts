@@ -1,18 +1,5 @@
 import * as doken from 'doken';
-import { PowerLevel } from '.';
-
-export type Parsed =
-  | {
-      type: 'cook';
-      powerLevel: 'HI' | number;
-      minutes: number;
-      seconds: number;
-      secondsFull: number;
-    }
-  | {
-      type: 'change';
-      changes: Array<string>;
-    };
+import { PowerLevel, Parsed } from '.';
 
 const tokenize = doken.createTokenizer({
   rules: [

@@ -34,25 +34,17 @@ import * as smisf from 'smisf';
 const creator = new smisf.Creator();
 creator.cook(minutes, seconds, powerLevel); // Add a cook instruction // powerLevel can be either: "HI", Or a multiple of 10 from 00 to 90
 
-creator.change('M'); // Apply a single change, a single letter
-creator.change(['U', 'F', 'S']); // Apply multiple changes, each a single letter
+creator.change('M'); // Apply a single change // A single letter
+creator.change(['U', 'F', 'S']); // Apply multiple changes // Each a single letter
 
-creator.toString(); // Get HEX string
-creator.toString(true); // Get string
+creator.value; // Get string
 
 creator.do(); // Get string and clear, ready for another instruction set
 ```
 
 ```ts
 const parse = smisf.parse; // Just a shorthand
-parse(hexString); // Parse an instruction string, returns an array of objects, see <Parsed value types> for object types
-```
-
-```ts
-const stepper = smisf.stepper(hexString); // Generator
-for (let value of stepper) {
-  // value is a parsed value, see <Parsed value types>
-}
+parse(string); // Parse an instruction string, returns an array of objects, see <Parsed value types> for object types
 ```
 
 ### Parsed value types:
@@ -79,14 +71,9 @@ import { inspect } from 'util';
 const c = new smisf.Creator();
 const created = c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').do();
 const parsed = smisf.parse(created);
-const stepper = smisf.stepper(created);
 
-console.log(`Created: ${c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').toString(true)}`);
+console.log(`Created: ${c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').do()}`);
 console.log(`Parsed: ${inspect(parsed)}`);
-
-for (let i of stepper) {
-  console.log(`Stepper result: ${inspect(i)}`);
-}
 ```
 
 # Format
@@ -97,8 +84,8 @@ Instruction strings should be UTF-8
 
 ```
 <SMISF=args>
-args can be one of the following:
-  /POWERLEVEL#MINS:SECONDS
+args can be one/several of the following:
+  ;POWERLEVEL#MINS:SECONDS
     POWERLEVEL can be either:
       HI
       Or a multiple of 10 from 00 to 90
@@ -110,7 +97,7 @@ args can be one of the following:
       01
       59
 
-  /@OPERATIONS
+  ;@OPERATIONS
     OPERATIONS can be multiple "operations" (see Operations section)
 ```
 
@@ -126,8 +113,8 @@ U - Uncover
 
 ### Examples
 
-`<SMISF=/@C/HI#1:35/@UF/30#0:10>` - Cover, 1 minute and 35 seconds on HIGH, Uncover, Flip, 10 seconds on 30.
-`<SMISF=/70#25:00>` - Twenty-five minutes on 70
+`<SMISF=;@C;HI#1:35;@UF;30#0:10>` - Cover, 1 minute and 35 seconds on HIGH, Uncover, Flip, 10 seconds on 30.
+`<SMISF=;70#25:00>` - Twenty-five minutes on 70
 
 [GitHub](https://github.com/Consoli0/smisf) | [NPM](https://npmjs.com/package/smisf)
 

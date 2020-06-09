@@ -82,7 +82,6 @@ const parsed = smisf.parse(created);
 const stepper = smisf.stepper(created);
 
 console.log(`Created: ${c.cook(1, 0, 'HI').change('F').cook(0, 45, 'HI').toString(true)}`);
-console.log(`Created, HEX: ${inspect(created)}`);
 console.log(`Parsed: ${inspect(parsed)}`);
 
 for (let i of stepper) {
@@ -92,7 +91,7 @@ for (let i of stepper) {
 
 # Format
 
-Instruction strings should be UTF-8, then encoded into HEX.
+Instruction strings should be UTF-8
 
 ### Syntax
 
@@ -111,7 +110,7 @@ args can be one of the following:
       01
       59
 
-  /OPERATIONS
+  /@OPERATIONS
     OPERATIONS can be multiple "operations" (see Operations section)
 ```
 
@@ -127,7 +126,7 @@ U - Uncover
 
 ### Examples
 
-`<SMISF=/C/HI#1:35/UF/30#0:10>` - Cover, 1 minute and 35 seconds on HIGH, Uncover, Flip, 10 seconds on 30.
+`<SMISF=/@C/HI#1:35/@UF/30#0:10>` - Cover, 1 minute and 35 seconds on HIGH, Uncover, Flip, 10 seconds on 30.
 `<SMISF=/70#25:00>` - Twenty-five minutes on 70
 
 [GitHub](https://github.com/Consoli0/smisf) | [NPM](https://npmjs.com/package/smisf)
